@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Phiếu Bài Tập: Đột Biến Gene (KHTN 9) 🐾</title>
+    <style>
+        :root {
+            --bg-color: #FFFDF9;
+            --primary-pink: #FF8FA3;
+            --dark-pink: #D93856;
+            --light-pink: #FFF2F4;
+            --border-pink: #FFC2D1;
+            --sec-nb-bg: #E8F5E9;
+            --sec-nb-color: #2E7D32;
+            --sec-th-bg: #E3F2FD;
+            --sec-th-color: #1565C0;
+            --sec-vd-bg: #FFF3E0;
+            --sec-vd-color: #E65100;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10.5pt;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #F7F5F0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .worksheet-container {
+            max-width: 820px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            border-radius: 20px;
+            padding: 25px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 3px solid #F0EAE1;
+            position: relative;
+        }
+
+        /* Modal nhập thông tin ban đầu */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border: 3px dashed var(--primary-pink);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-box h2 { color: var(--dark-pink); margin-top: 0; font-size: 14pt; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; }
+        .input-group input {
+            width: 100%; padding: 10px; border: 2px solid var(--border-pink);
+            border-radius: 10px; outline: none; font-size: 10pt;
+        }
+
+        /* Đồng hồ bấm giờ */
+        .timer-badge {
+            position: fixed; top: 15px; right: 20px; background-color: #FFF;
+            border: 2px solid var(--primary-pink); padding: 8px 15px; border-radius: 20px;
+            font-weight: bold; color: var(--dark-pink); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 100; font-size: 11pt;
+        }
+
+        .btn {
+            background-color: var(--primary-pink); color: white; border: none;
+            padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 10pt;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(255, 143, 163, 0.4); transition: all 0.2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); background-color: var(--dark-pink); }
+
+        .btn-submit {
+            background-color: #4CAF50; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+            width: 100%; padding: 14px; font-size: 12pt; margin-top: 20px; border-radius: 15px;
+        }
+        .btn-submit:hover { background-color: #388E3C; }
+
+        /* Header Banner */
+        .header-card {
+            background-color: var(--light-pink); border: 2px dashed var(--primary-pink);
+            border-radius: 15px; padding: 12px 18px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-left { width: 58%; }
+        .header-right { width: 40%; }
+        .doc-title { font-size: 13.5pt; font-weight: bold; color: var(--dark-pink); margin: 0 0 3px 0; }
+
+        .student-info-box {
+            background-color: #FFFFFF; border: 1.5px solid var(--border-pink);
+            border-radius: 10px; padding: 8px 12px; font-size: 9pt;
+        }
+
+        /* NỘI DUNG 1: SƠ ĐỒ TRỰC QUAN CUTE */
+        .nst-diagram-container {
+            background-color: #FFFDF9; border: 2.5px dashed #FF8FA3;
+            border-radius: 20px; padding: 18px; margin-bottom: 25px;
+        }
+        .diagram-title { text-align: center; color: #D93856; font-size: 12pt; font-weight: bold; margin-bottom: 15px; }
+
+        .nst-layout {
+            display: flex; justify-content: space-around; align-items: stretch;
+            gap: 15px; flex-wrap: wrap;
+        }
+
+        .nst-box {
+            background: #FFFFFF; border: 1.5px solid #FFE0E6; border-radius: 15px;
+            padding: 12px; text-align: center; width: 47%; min-width: 280px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .nst-box-title { font-weight: bold; font-size: 9.5pt; color: #AB47BC; margin-bottom: 8px; }
+
+        .structure-list {
+            text-align: left; font-size: 8.5pt; line-height: 1.6; margin-top: 8px;
+            background-color: #F3E5F5; padding: 8px 12px; border-radius: 10px;
+        }
+
+        /* NỘI DUNG 2: BÀI TẬP TƯƠNG TÁC */
+        .section-header {
+            border-radius: 12px; padding: 8px 14px; margin-top: 20px;
+            margin-bottom: 12px; font-weight: bold; font-size: 10.5pt;
+        }
+        .sec-nhan-biet { background-color: var(--sec-nb-bg); color: var(--sec-nb-color); border: 1.5px solid #A5D6A7; }
+        .sec-thong-hieu { background-color: var(--sec-th-bg); color: var(--sec-th-color); border: 1.5px solid #90CAF9; }
+        .sec-van-dung { background-color: var(--sec-vd-bg); color: var(--sec-vd-color); border: 1.5px solid #FFCC80; }
+
+        .question-card {
+            background-color: #FFFFFF; border: 1px solid #E0E0E0; border-radius: 12px;
+            padding: 12px 16px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .q-title { font-weight: bold; color: #444444; margin-bottom: 8px; }
+        .q-title .q-num { color: #FF6B8B; font-size: 10.5pt; }
+
+        .badge { font-size: 7.5pt; padding: 2px 8px; border-radius: 10px; color: white; float: right; }
+        .badge-nb { background-color: #66BB6A; }
+        .badge-th { background-color: #42A5F5; }
+        .badge-vd { background-color: #FFA726; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 8px; }
+        .opt-item {
+            background-color: #FAFAFA; border: 1px solid #E0E0E0; border-radius: 8px;
+            padding: 8px 12px; cursor: pointer; transition: all 0.2s; user-select: none; font-size: 9.5pt;
+        }
+        .opt-item:hover { background-color: #FFF2F4; border-color: var(--primary-pink); }
+        .opt-item.selected { background-color: #FFE0E6; border-color: var(--dark-pink); font-weight: bold; color: var(--dark-pink); }
+
+        .word-bank {
+            background-color: #FFF8E1; border: 1.5px dashed #FFE082; border-radius: 8px;
+            padding: 6px; margin-bottom: 8px; font-weight: bold; color: #F57F17; text-align: center; font-size: 9pt;
+        }
+        .fill-box { background-color: #FAFAFA; border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px 14px; line-height: 2.2; font-size: 9.5pt; }
+        .blank-select {
+            border: none; border-bottom: 2px solid var(--primary-pink); background: transparent;
+            font-weight: bold; color: var(--dark-pink); padding: 2px 4px; outline: none; font-size: 9.5pt;
+        }
+
+        .tf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 9.5pt; }
+        .tf-table th, .tf-table td { padding: 8px; border: 1px solid #E0E0E0; text-align: left; }
+        .tf-table th { background-color: #FAFAFA; }
+
+        /* Kéo thả (Drag & Drop) */
+        .drag-container { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; }
+        .source-pool { background: #EFEBE9; padding: 10px; border-radius: 10px; width: 100%; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; min-height: 45px; }
+        .drag-item { background: white; border: 2px solid #8D6E63; padding: 6px 12px; border-radius: 8px; cursor: grab; font-weight: bold; color: #5D4037; font-size: 9pt; user-select: none; }
+        .drop-zone { border: 2px dashed #BCAAA4; background: #FAFAFA; padding: 8px; border-radius: 8px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; width: 180px; vertical-align: middle; }
+        .drop-zone.dragover { background: #FFECB3; border-color: #FFA000; }
+
+        /* Phản hồi kết quả */
+        .result-feedback {
+            margin-top: 10px; font-weight: bold; font-size: 9pt; display: none;
+            padding: 10px 12px; border-radius: 8px; line-height: 1.5;
+        }
+        .feedback-correct { color: #2E7D32; background-color: #E8F5E9; border: 1px solid #C8E6C9; }
+        .feedback-wrong { color: #C62828; background-color: #FFEBEE; border: 1px solid #FFCDD2; }
+
+        .submit-status {
+            text-align: center; margin-top: 15px; font-weight: bold; font-size: 10.5pt; display: none; padding: 10px; border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ĐỒNG HỒ BẤM GIỜ -->
+    <div class="timer-badge" id="timer">⏱️ Thời gian: 00:00</div>
+
+    <!-- MODAL NHẬP THÔNG TIN BAN ĐẦU -->
+    <div class="modal-overlay" id="start-modal">
+        <div class="modal-box">
+            <h2>🌸 Chào Mừng Em Đến Với Trò Chơi! 🐾</h2>
+            <p style="font-size: 9pt; color: #666;">Nhập đầy đủ thông tin để bắt đầu khám phá thế giới Đột Biến Gene nhé!</p>
+            <div class="input-group">
+                <label>Họ và tên học sinh:</label>
+                <input type="text" id="input-name" placeholder="Ví dụ: Nguyễn Thị Mai">
+            </div>
+            <div class="input-group">
+                <label>Lớp:</label>
+                <input type="text" id="input-class" placeholder="Ví dụ: 9A2">
+            </div>
+            <button class="btn" style="width: 100%; padding: 12px; font-size: 11pt;" onclick="startGame()">🚀 Bắt Đầu Thử Thách</button>
+        </div>
+    </div>
+
+    <div class="worksheet-container">
+
+        <!-- HEADER BANNER -->
+        <div class="header-card">
+            <div class="header-left">
+                <div class="doc-title">🌸 PHIẾU BÀI TẬP KHTN 9 🐾</div>
+                <div style="font-weight: bold; color: #594A42;">Bài 41: Đột Biến Gene</div>
+                <div style="font-size: 8pt; color: #777;">Bộ sách Kết nối tri thức với cuộc sống</div>
+            </div>
+            <div class="header-right">
+                <div class="student-info-box">
+                    <div><b>Họ tên:</b> <span id="display-name" style="color:var(--dark-pink); font-weight:bold;">---</span></div>
+                    <div><b>Lớp:</b> <span id="display-class" style="color:var(--dark-pink); font-weight:bold;">---</span></div>
+                    <div><b>Điểm số:</b> <span id="score-display" style="font-weight:bold; color:var(--dark-pink); font-size: 11pt;">......../10</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NỘI DUNG 1: SƠ ĐỒ TRỰC QUAN CUTE -->
+        <div class="nst-diagram-container">
+            <div class="diagram-title">🧬 NỘI DUNG 1: SƠ ĐỒ TRỰC QUAN ĐỘT BIẾN GENE 🐾</div>
+
+            <div class="nst-layout">
+                <!-- HÌNH 1: KHÁI NIỆM & NGUYÊN NHÂN -->
+                <div class="nst-box" style="background: #FFF2F4; border-color: #FFC2D1;">
+                    <div class="nst-box-title" style="color: #D93856;">⚠️ Đột Biến Gene Là Gì?</div>
+                    <div style="font-size: 20pt; margin: 4px 0;">🧬 ⚡️ 🔀</div>
+                    <div class="structure-list" style="background-color: #FFE0E6;">
+                        <b>🧬 Khái niệm:</b> Những biến đổi nhỏ trong cấu trúc của gene, liên quan đến một hoặc vài cặp nucleotide.<br/>
+                        <b>☢️ Nguyên nhân:</b> Tác nhân vật lí (Tia UV, phóng xạ...), hóa học (hóa chất độc hại), sinh học (virus) hoặc do sai sót khi nhân đôi DNA.
+                    </div>
+                </div>
+
+                <!-- HÌNH 2: CÁC DẠNG ĐỘT BIẾN ĐIỂM -->
+                <div class="nst-box" style="background: #E8F5E9; border-color: #A5D6A7;">
+                    <div class="nst-box-title" style="color: #2E7D32;">✂️ Các Dạng Đột Biến Điểm</div>
+                    <div style="font-size: 14pt; margin: 6px 0; font-family: monospace; font-weight: bold;">
+                        A-T, G-C ➔ T-A, G-C
+                    </div>
+                    <div class="structure-list" style="background-color: #C8E6C9;">
+                        <b>1️⃣ Thay thế 1 cặp nucleotit:</b> Cặp Nu này bị thay bằng cặp Nu khác.<br/>
+                        <b>2️⃣ Thêm 1 cặp nucleotit:</b> Chèn thêm 1 cặp Nu vào chuỗi DNA.<br/>
+                        <b>3️⃣ Mất 1 cặp nucleotit:</b> Mất đi 1 cặp Nu khỏi chuỗi DNA.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NỘI DUNG 2: BÀI TẬP TƯƠNG TÁC -->
+        <div style="text-align:center; color:#D93856; font-weight:bold; font-size:12pt; margin-bottom:15px;">
+            📝 NỘI DUNG 2: HỆ THỐNG BÀI TẬP TƯƠNG TÁC (SBT KHTN 9) 🐾
+        </div>
+
+        <!-- ================= MỨC ĐỘ 1: NHẬN BIẾT ================= -->
+        <div class="section-header sec-nhan-biet">🌱 MỨC ĐỘ 1: NHẬN BIẾT</div>
+
+        <!-- CÂU 1: Trắc nghiệm nhiều lựa chọn -->
+        <div class="question-card" id="q1">
+            <div class="q-title"><span class="q-num">Câu 1 [Trắc nghiệm]:</span> Đột biến gene là những biến đổi trong cấu trúc của gene, thường liên quan đến: (SBT Bài 41) <span class="badge badge-nb">Nhận biết</span></div>
+            <div class="options-grid">
+                <div class="opt-item" onclick="selectOption(this, 'q1', 'A')">A. Một số nhiễm sắc thể</div>
+                <div class="opt-item" onclick="selectOption(this, 'q1', 'B')">B. Toàn bộ bộ nhiễm sắc thể</div>
+                <div class="opt-item" onclick="selectOption(this, 'q1', 'C')">C. Một hoặc một vài cặp nucleotide</div>
+                <div class="opt-item" onclick="selectOption(this, 'q1', 'D')">D. Một đoạn lớn của nhiễm sắc thể</div>
+            </div>
+            <div class="result-feedback"></div>
+        </div>
+
+        <!-- CÂU 2: Điền từ -->
+        <div class="question-card" id="q2">
+            <div class="q-title"><span class="q-num">Câu 2 [Điền từ]:</span> Điền từ/cụm từ thích hợp vào chỗ trống để hoàn thành các khái niệm sau: <span class="badge badge-nb">Nhận biết</span></div>
+            <div class="word-bank">[ đột biến điểm | thể đột biến | có hại ]</div>
+            <div class="fill-box">
+                - Đột biến gene liên quan đến một cặp nucleotide được gọi là <select class="blank-select" id="q2_1"><option value="">(1) ...</option><option value="đột biến điểm">đột biến điểm</option><option value="đột biến lớn">đột biến lớn</option></select>.<br/>
+                - Cá thể mang gene đột biến đã biểu hiện thành kiểu hình được gọi là <select class="blank-select" id="q2_2"><option value="">(2) ...</option><option value="thể đột biến">thể đột biến</option><option value="kiểu dại">kiểu dại</option></select>.<br/>
+                - Đa số đột biến gene là <select class="blank-select" id="q2_3"><option value="">(3) ...</option><option value="có hại">có hại</option><option value="có lợi">có lợi</option></select> cho bản thân sinh vật vì phá vỡ sự thống nhất hài hòa trong cơ thể.
+            </div>
+            <div class="result-feedback"></div>
+        </div>
+
+
+        <!-- ================= MỨC ĐỘ 2: THÔNG HIỂU ================= -->
+        <div class="section-header sec-thong-hieu">🐥 MỨC ĐỘ 2: THÔNG HIỂU</div>
+
+        <!-- CÂU 3: Trắc nghiệm Đúng / Sai -->
+        <div class="question-card" id="q3">
+            <div class="q-title"><span class="q-num">Câu 3 [Đúng / Sai]:</span> Đánh dấu vào ô Đúng hoặc Sai cho các phát biểu về đột biến gene: <span class="badge badge-th">Thông hiểu</span></div>
+            <table class="tf-table">
+                <tr><th>Phát biểu sinh học</th><th style="width:60px; text-align:center;">Đúng</th><th style="width:60px; text-align:center;">Chọn Sai</th></tr>
+                <tr>
+                    <td>a) Đột biến thay thế một cặp nucleotide luôn luôn làm thay đổi cấu trúc của protein tương ứng.</td>
+                    <td style="text-align:center;"><input type="radio" name="q3_a" value="D"></td>
+                    <td style="text-align:center;"><input type="radio" name="q3_a" value="S"></td>
+                </tr>
+                <tr>
+                    <td>b) Nguyên nhân phát sinh đột biến gene có thể do các tác nhân vật lí, hóa học, sinh học từ môi trường bên ngoài hoặc những rối loạn sinh lí, sinh hóa bên trong tế bào.</td>
+                    <td style="text-align:center;"><input type="radio" name="q3_b" value="D"></td>
+                    <td style="text-align:center;"><input type="radio" name="q3_b" value="S"></td>
+                </tr>
+                <tr>
+                    <td>c) Tia tử ngoại (UV), tia phóng xạ (X, gamma), các hóa chất như 5-BU, thuốc trừ sâu là những tác nhân có thể gây đột biến gene.</td>
+                    <td style="text-align:center;"><input type="radio" name="q3_c" value="D"></td>
+                    <td style="text-align:center;"><input type="radio" name="q3_c" value="S"></td>
+                </tr>
+            </table>
+            <div class="result-feedback"></div>
+        </div>
+
+        <!-- CÂU 4: Kéo thả ghép cặp -->
+        <div class="question-card" id="q4">
+            <div class="q-title"><span class="q-num">Câu 4 [Kéo thả]:</span> Kéo hậu quả tương ứng với dạng đột biến cấu trúc gene (đột biến điểm): <span class="badge badge-th">Thông hiểu</span></div>
+            
+            <div class="drag-container">
+                <div class="source-pool" id="pool">
+                    <span style="font-weight:bold; font-size:9pt; color:#5D4037;">Kéo các thẻ hậu quả sau:</span>
+                    <div class="drag-item" draggable="true" id="item-thay-the" ondragstart="drag(event)">Số lượng nucleotit không đổi</div>
+                    <div class="drag-item" draggable="true" id="item-them" ondragstart="drag(event)">Tăng thêm 1 cặp nucleotit</div>
+                    <div class="drag-item" draggable="true" id="item-mat" ondragstart="drag(event)">Giảm đi 1 cặp nucleotit</div>
+                </div>
+            </div>
+
+            <table class="tf-table" style="margin-top:12px;">
+                <tr><th>Dạng đột biến điểm</th><th>Hậu quả về mặt số lượng Nucleotide</th></tr>
+                <tr>
+                    <td><b>1. Đột biến Mất 1 cặp nucleotide</b></td>
+                    <td><div class="drop-zone" id="drop-mat" ondragover="allowDrop(event)" ondrop="drop(event)">Thả thẻ vào đây</div></td>
+                </tr>
+                <tr>
+                    <td><b>2. Đột biến Thay thế 1 cặp nucleotide</b></td>
+                    <td><div class="drop-zone" id="drop-thaythe" ondragover="allowDrop(event)" ondrop="drop(event)">Thả thẻ vào đây</div></td>
+                </tr>
+                <tr>
+                    <td><b>3. Đột biến Thêm 1 cặp nucleotide</b></td>
+                    <td><div class="drop-zone" id="drop-them" ondragover="allowDrop(event)" ondrop="drop(event)">Thả thẻ vào đây</div></td>
+                </tr>
+            </table>
+            <div class="result-feedback"></div>
+        </div>
+
+
+        <!-- ================= MỨC ĐỘ 3: VẬN DỤNG ================= -->
+        <div class="section-header sec-van-dung">🚀 MỨC ĐỘ 3: VẬN DỤNG</div>
+
+        <!-- CÂU 5: Trắc nghiệm Vận dụng tính toán -->
+        <div class="question-card" id="q5">
+            <div class="q-title"><span class="q-num">Câu 5 [Trắc nghiệm Vận dụng]:</span> Một gene ban đầu dài 510 nm có số nucleotide loại A = 600. Sau đột biến, chiều dài gene không đổi nhưng số nucleotide loại A = 599. Đây là dạng đột biến nào? <span class="badge badge-vd">Vận dụng</span></div>
+            <div class="options-grid">
+                <div class="opt-item" onclick="selectOption(this, 'q5', 'A')">A. Mất 1 cặp A-T</div>
+                <div class="opt-item" onclick="selectOption(this, 'q5', 'B')">B. Thêm 1 cặp G-C</div>
+                <div class="opt-item" onclick="selectOption(this, 'q5', 'C')">C. Thay thế 1 cặp A-T bằng 1 cặp G-C</div>
+                <div class="opt-item" onclick="selectOption(this, 'q5', 'D')">D. Thay thế 1 cặp G-C bằng 1 cặp A-T</div>
+            </div>
+            <div class="result-feedback"></div>
+        </div>
+
+
+        <!-- NÚT NỘP BÀI -->
+        <button class="btn btn-submit" id="btn-submit-main" onclick="submitWorksheet()">🎮 NỘP BÀI VÀ GỬI KẾT QUẢ VỀ HỆ THỐNG</button>
+        <div class="submit-status" id="submit-status">⏳ Đang gửi kết quả lên hệ thống Google Sheets...</div>
+
+    </div>
+
+    <!-- JAVASCRIPT XỬ LÝ LOGIC TRÒ CHƠI & GỬI API POST -->
+    <script>
+        let seconds = 0;
+        let timerInterval = null;
+        let isSubmitted = false;
+        const userAnswers = { q1: null, q3_a: null, q3_b: null, q3_c: null, q5: null };
+        const dragAnswers = { 'drop-mat': '', 'drop-thaythe': '', 'drop-them': '' };
+
+        function startGame() {
+            const name = document.getElementById('input-name').value.trim();
+            const className = document.getElementById('input-class').value.trim();
+
+            if (!name || !className) {
+                alert("Vui lòng điền đầy đủ Họ và tên và Lớp của em trước khi bắt đầu nhé!");
+                return;
+            }
+
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('display-class').innerText = className;
+            document.getElementById('start-modal').style.display = 'none';
+
+            timerInterval = setInterval(() => {
+                seconds++;
+                let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                let s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `⏱️ Thời gian: ${m}:${s}`;
+            }, 1000);
+        }
+
+        function selectOption(element, qId, value) {
+            if (isSubmitted) return; // Khóa sau nộp
+            const parent = element.parentElement;
+            parent.querySelectorAll('.opt-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            userAnswers[qId] = value;
+        }
+
+        // Kéo thả logic
+        function allowDrop(ev) {
+            if (isSubmitted) return;
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function drag(ev) {
+            if (isSubmitted) return;
+            ev.dataTransfer.setData("text", ev.target.innerText);
+        }
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragleave', e => e.currentTarget.classList.remove('dragover'));
+        });
+
+        function drop(ev) {
+            if (isSubmitted) return;
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+            const data = ev.dataTransfer.getData("text");
+            ev.currentTarget.innerText = data;
+            ev.currentTarget.style.fontWeight = "bold";
+            ev.currentTarget.style.color = "#D93856";
+            dragAnswers[ev.currentTarget.id] = data;
+        }
+
+        // Chấm bài & Gửi API Google Sheets
+        function submitWorksheet() {
+            if (isSubmitted) return;
+            if (!confirm("Em có chắc chắn muốn nộp bài? Sau khi nộp em sẽ không thể chỉnh sửa đáp án!")) return;
+
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Khóa các trường chọn & kéo thả
+            document.querySelectorAll('.opt-item').forEach(el => el.style.pointerEvents = 'none');
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.disabled = true);
+            document.querySelectorAll('select').forEach(el => el.disabled = true);
+            document.querySelectorAll('.drag-item').forEach(el => el.draggable = false);
+
+            let score = 0;
+            let totalQuestions = 5;
+            let chiTietText = [];
+
+            // Chấm Câu 1: Trắc nghiệm (Đáp án đúng: C)
+            const q1Fb = document.querySelector('#q1 .result-feedback');
+            q1Fb.style.display = 'block';
+            if (userAnswers['q1'] === 'C') {
+                q1Fb.className = 'result-feedback feedback-correct';
+                q1Fb.innerHTML = '🎉 <b>Đúng (+2.0 điểm):</b> Đột biến gene là những biến đổi cấu trúc của gene, liên quan đến 1 hoặc 1 số cặp nucleotide.';
+                score++;
+                chiTietText.push("Câu 1: Đúng");
+            } else {
+                q1Fb.className = 'result-feedback feedback-wrong';
+                q1Fb.innerHTML = '❌ <b>Sai (0.0 điểm):</b> Đáp án chuẩn: C. Một hoặc một vài cặp nucleotide.<br>💡 <i>Giải thích:</i> Đột biến nhiễm sắc thể mới liên quan đến các NST.';
+                chiTietText.push("Câu 1: Sai");
+            }
+
+            // Chấm Câu 2: Điền từ (đột biến điểm, thể đột biến, có hại)
+            const q2_1 = document.getElementById('q2_1').value;
+            const q2_2 = document.getElementById('q2_2').value;
+            const q2_3 = document.getElementById('q2_3').value;
+            const q2Fb = document.querySelector('#q2 .result-feedback');
+            q2Fb.style.display = 'block';
+            let q2Score = 0;
+            if (q2_1 === 'đột biến điểm') q2Score += 0.33;
+            if (q2_2 === 'thể đột biến') q2Score += 0.33;
+            if (q2_3 === 'có hại') q2Score += 0.34;
+
+            if (q2Score >= 0.9) {
+                q2Fb.className = 'result-feedback feedback-correct';
+                q2Fb.innerHTML = '🎉 <b>Đúng (+2.0 điểm):</b> Rất xuất sắc! Bạn nắm vững các khái niệm cơ bản về đột biến gene.';
+                score++;
+                chiTietText.push("Câu 2: Đúng");
+            } else {
+                q2Fb.className = 'result-feedback feedback-wrong';
+                q2Fb.innerHTML = `❌ <b>Chưa hoàn toàn chính xác (Điểm thành phần: ${(q2Score*2).toFixed(1)}/2.0):</b><br>💡 <i>Giải thích:</i> (1) đột biến điểm, (2) thể đột biến, (3) có hại.`;
+                chiTietText.push(`Câu 2: Sai (${(q2Score*2).toFixed(1)})`);
+            }
+
+            // Chấm Câu 3: Đúng / Sai (a: Sai, b: Đúng, c: Đúng)
+            const q3_a = document.querySelector('input[name="q3_a"]:checked')?.value;
+            const q3_b = document.querySelector('input[name="q3_b"]:checked')?.value;
+            const q3_c = document.querySelector('input[name="q3_c"]:checked')?.value;
+            const q3Fb = document.querySelector('#q3 .result-feedback');
+            q3Fb.style.display = 'block';
+            let q3Correct = (q3_a === 'S' && q3_b === 'D' && q3_c === 'D');
+            if (q3Correct) {
+                q3Fb.className = 'result-feedback feedback-correct';
+                q3Fb.innerHTML = '🎉 <b>Đúng (+2.0 điểm):</b> Phân tích rất sắc bén! Nhận định (a) sai do tính thoái hóa của mã di truyền, thay thế nucleotide có thể không làm đổi acid amin.';
+                score++;
+                chiTietText.push("Câu 3: Đúng");
+            } else {
+                q3Fb.className = 'result-feedback feedback-wrong';
+                q3Fb.innerHTML = '❌ <b>Sai (0.0 điểm):</b><br>💡 <i>Giải thích chuẩn:</i> a) Sai (ĐB thay thế có thể không làm đổi protein do tính thoái hóa); b) Đúng; c) Đúng.';
+                chiTietText.push("Câu 3: Sai");
+            }
+
+            // Chấm Câu 4: Kéo thả (drop-mat: giảm, drop-thaythe: không đổi, drop-them: tăng)
+            const q4Fb = document.querySelector('#q4 .result-feedback');
+            q4Fb.style.display = 'block';
+            if (dragAnswers['drop-mat'].includes('Giảm') && dragAnswers['drop-thaythe'].includes('không đổi') && dragAnswers['drop-them'].includes('Tăng')) {
+                q4Fb.className = 'result-feedback feedback-correct';
+                q4Fb.innerHTML = '🎉 <b>Đúng (+2.0 điểm):</b> Kéo thả quá chuẩn! Bạn hiểu rõ hậu quả số lượng của từng loại đột biến.';
+                score++;
+                chiTietText.push("Câu 4: Đúng");
+            } else {
+                q4Fb.className = 'result-feedback feedback-wrong';
+                q4Fb.innerHTML = '❌ <b>Sai (0.0 điểm):</b><br>💡 <i>Giải thích:</i> Mất đi 1 cặp: Giảm 1 cặp. Thay thế 1 cặp bằng 1 cặp khác: Số lượng không đổi. Thêm vào 1 cặp: Tăng 1 cặp.';
+                chiTietText.push("Câu 4: Sai");
+            }
+
+            // Chấm Câu 5: Vận dụng (Đáp án C)
+            const q5Fb = document.querySelector('#q5 .result-feedback');
+            q5Fb.style.display = 'block';
+            if (userAnswers['q5'] === 'C') {
+                q5Fb.className = 'result-feedback feedback-correct';
+                q5Fb.innerHTML = '🎉 <b>Đúng (+2.0 điểm):</b> Tuyệt vời! Chiều dài không đổi ➔ Đột biến thay thế. Số Nu loại A giảm 1 ➔ Thay 1 cặp A-T bằng 1 cặp G-C.';
+                score++;
+                chiTietText.push("Câu 5: Đúng");
+            } else {
+                q5Fb.className = 'result-feedback feedback-wrong';
+                q5Fb.innerHTML = '❌ <b>Sai (0.0 điểm):</b> Đáp án chuẩn: C. Thay thế 1 cặp A-T bằng 1 cặp G-C.<br>💡 <i>Giải thích:</i> Chiều dài gen không đổi nên tổng số Nucleotide không đổi, tức là đột biến thay thế. A giảm đi 1 nên đã thay 1 cặp A-T bằng cặp G-C.';
+                chiTietText.push("Câu 5: Sai");
+            }
+
+            // Tính thang điểm 10
+            const finalScore = ((score / totalQuestions) * 10).toFixed(1);
+            document.getElementById('score-display').innerText = `${finalScore} / 10`;
+
+            document.getElementById('btn-submit-main').disabled = true;
+            document.getElementById('btn-submit-main').innerText = '✅ ĐÃ NỘP BÀI THÀNH CÔNG';
+
+            // GỬI DỮ LIỆU VỀ GOOGLE SHEETS BẰNG FETCH POST JSON
+            const hoTen = document.getElementById('display-name').innerText;
+            const lop = document.getElementById('display-class').innerText;
+            const payload = {
+                hoTen: hoTen,
+                lop: lop,
+                diemSo: finalScore,
+                chiTiet: chiTietText.join("; ")
+            };
+
+            const statusEl = document.getElementById('submit-status');
+            statusEl.style.display = 'block';
+
+            // URL Web App Google Apps Script mới nhất do bạn cung cấp
+            const apiUrl = "https://script.google.com/macros/s/AKfycbwF-9ynrjUNpNkYc2EoNznSrQmynCMo4SMyPqmMwrXd20MdkmaJQyZ72xTVHaBtROgV/exec";
+
+            fetch(apiUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusEl.innerText = "✅ Đã tự động lưu kết quả bài làm vào hệ thống Google Sheets thành công!";
+                statusEl.style.color = "#2E7D32";
+                statusEl.style.backgroundColor = "#E8F5E9";
+                statusEl.style.border = "1px solid #A5D6A7";
+            })
+            .catch(error => {
+                console.error("Lỗi gửi API:", error);
+                statusEl.innerText = "⚠️ Đã chấm điểm xong nhưng có lỗi kết nối khi lưu tự động vào Google Sheets.";
+                statusEl.style.color = "#C62828";
+                statusEl.style.backgroundColor = "#FFEBEE";
+                statusEl.style.border = "1px solid #EF9A9A";
+            });
+
+            let m = Math.floor(seconds / 60);
+            let s = seconds % 60;
+            alert(`🎉 Chúc mừng ${hoTen} đã hoàn thành bài làm!\n⏱️ Thời gian: ${m} phút ${s} giây.\n💯 Điểm số: ${finalScore} / 10 điểm.`);
+        }
+    </script>
+</body>
+</html>
